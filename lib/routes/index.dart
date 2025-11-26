@@ -8,6 +8,7 @@ Widget getRootWidget() {
   return MaterialApp(routes: getRootRoutes());
 }
 
+// 通过一个函数返回app的路由配置
 Map<String, Widget Function(BuildContext)> getRootRoutes() {
   return {
     '/': (context) => MainPage(), // 主页路由
