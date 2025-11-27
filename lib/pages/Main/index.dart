@@ -59,7 +59,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       // appBar: AppBar(title: Text('主页')),
       body: SafeArea(
-        child: IndexedStack(children: _getIndexedStack(), index: _currentIndex),
+        child: IndexedStack(index: _currentIndex, children: _getIndexedStack()),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: _getTabBarWiget(),
