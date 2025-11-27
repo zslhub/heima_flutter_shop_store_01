@@ -11,6 +11,9 @@ class HmSlider extends StatefulWidget {
 }
 
 class _HmSliderState extends State<HmSlider> {
+  final CarouselSliderController _carouselSliderController =
+      CarouselSliderController();
+  int _activeDotIndex = 0;
   Widget _getSlider() {
     // 在flutter中获取屏幕宽度
     final screenWidth = MediaQuery.of(context).size.width;
@@ -22,7 +25,7 @@ class _HmSliderState extends State<HmSlider> {
           width: screenWidth,
         );
       }),
-      
+
       options: CarouselOptions(
         // 设置占比
         viewportFraction: 1,
@@ -30,6 +33,70 @@ class _HmSliderState extends State<HmSlider> {
         autoPlay: true,
         // 轮播间隔时间
         autoPlayInterval: Duration(seconds: 3),
+        onPageChanged: (index, reason) {
+          setState(() {
+            _activeDotIndex = index;
+          });
+        },
+      ),
+      carouselController: _carouselSliderController,
+    );
+  }
+
+  Widget _getSearch() {
+    return Positioned(
+      top: 10,
+      left: 0,
+      right: 0,
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: 40),
+          height: 40,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 0, 0, 0.4),
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Text(
+            '搜索',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _getDots() {
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: SizedBox(
+        height: 40,
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(widget.bannerList.length, (int index) {
+            return GestureDetector(
+              onTap: () {
+                _carouselSliderController.jumpToPage(index);
+              },
+              child: AnimatedContainer(
+                height: 10,
+                width: index == _activeDotIndex ? 40 : 20,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: index == _activeDotIndex
+                      ? Colors.white
+                      : Color.fromRGBO(0, 0, 0, 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -38,7 +105,6 @@ class _HmSliderState extends State<HmSlider> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        _getSlider(),
         // Container(
         //   alignment: Alignment.center,
         //   height: 200,
@@ -48,6 +114,9 @@ class _HmSliderState extends State<HmSlider> {
         //     style: TextStyle(color: Colors.white, fontSize: 20),
         //   ),
         // ),
+        _getSlider(),
+        _getSearch(),
+        _getDots(),
       ],
     );
   }
