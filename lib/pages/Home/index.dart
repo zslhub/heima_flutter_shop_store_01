@@ -39,13 +39,22 @@ class _HomeViewState extends State<HomeView> {
 
   List<BannerItem> _bannerList = [];
   List<CategoryItem> _categoryList = [];
-  
+  // 获取特惠推荐商品列表数据
+  SpecialRecommend _specialRecommend = SpecialRecommend(
+    id: '',
+    title: '',
+    subTypes: [],
+  );
+
   @override
   void initState() {
     super.initState();
     _getBannerList();
     _getCategoryList();
+    _getProductList();
   }
+
+
 
   // 获取BannerList数据
   _getBannerList() async {
@@ -61,6 +70,14 @@ class _HomeViewState extends State<HomeView> {
     setState(() {});
   }
 
+
+
+  _getProductList() async {
+    _specialRecommend = await getProductListAPI();
+    setState(() {});
+  }
+
+
   List<Widget> getScrollViewChildren() {
     return [
       // 轮播图
@@ -73,7 +90,7 @@ class _HomeViewState extends State<HomeView> {
       SliverToBoxAdapter(
         child: Padding(
           padding: EdgeInsets.only(left: 10, right: 10),
-          child: HmSuggestion(),
+          child: HmSuggestion(specialRecommend: _specialRecommend,),
         ),
       ),
       SliverToBoxAdapter(child: SizedBox(height: 20)),
