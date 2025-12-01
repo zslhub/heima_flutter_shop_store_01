@@ -38,10 +38,13 @@ class _HomeViewState extends State<HomeView> {
   // ];
 
   List<BannerItem> _bannerList = [];
+  List<CategoryItem> _categoryList = [];
+  
   @override
   void initState() {
     super.initState();
     _getBannerList();
+    _getCategoryList();
   }
 
   // 获取BannerList数据
@@ -52,13 +55,19 @@ class _HomeViewState extends State<HomeView> {
     setState(() {});
   }
 
+  // 获取分类数据
+  _getCategoryList() async {
+    _categoryList = await getCategoryListAPI();
+    setState(() {});
+  }
+
   List<Widget> getScrollViewChildren() {
     return [
       // 轮播图
       SliverToBoxAdapter(child: HmSlider(bannerList: _bannerList)),
       SliverToBoxAdapter(child: SizedBox(height: 20)),
       // 分类
-      SliverToBoxAdapter(child: HmCategory()),
+      SliverToBoxAdapter(child: HmCategory(categoryList: _categoryList,)),
       SliverToBoxAdapter(child: SizedBox(height: 20)),
       // 推荐
       SliverToBoxAdapter(
