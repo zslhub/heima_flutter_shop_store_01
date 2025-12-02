@@ -54,6 +54,7 @@ class _HomeViewState extends State<HomeView> {
     _getProductList();
     _getInVogueList();
     _getOneStopList();
+    _getRecommendList();
   }
 
   // 获取BannerList数据
@@ -100,6 +101,14 @@ class _HomeViewState extends State<HomeView> {
     setState(() {});
   }
 
+  // 推荐列表
+  List<GoodDetailItem> _recommendList = [];
+
+  // 获取推荐列表
+  void _getRecommendList() async {
+    _recommendList = await getRecommendListAPI({"limit": 10});
+    setState(() {});
+  }
   List<Widget> getScrollViewChildren() {
     return [
       // 轮播图
@@ -136,7 +145,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       SliverToBoxAdapter(child: SizedBox(height: 20)),
       // 滚动列表
-      HmMoreList(),
+      HmMoreList(recommendList: _recommendList), // 无限滚动列表
     ];
   }
 
