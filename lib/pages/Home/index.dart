@@ -52,9 +52,9 @@ class _HomeViewState extends State<HomeView> {
     _getBannerList();
     _getCategoryList();
     _getProductList();
+    _getInVogueList();
+    _getOneStopList();
   }
-
-
 
   // 获取BannerList数据
   _getBannerList() async {
@@ -70,13 +70,35 @@ class _HomeViewState extends State<HomeView> {
     setState(() {});
   }
 
-
-
   _getProductList() async {
     _specialRecommend = await getProductListAPI();
     setState(() {});
   }
 
+  // 热榜推荐
+  SpecialRecommend _inVogueResult = SpecialRecommend(
+    id: "",
+    title: "",
+    subTypes: [],
+  );
+  // 一站式推荐
+  SpecialRecommend _oneStopResult = SpecialRecommend(
+    id: "",
+    title: "",
+    subTypes: [],
+  );
+
+  // 获取热榜推荐列表
+  void _getInVogueList() async {
+    _inVogueResult = await getInVogueListAPI();
+    setState(() {});
+  }
+
+  // 获取一站式推荐列表
+  void _getOneStopList() async {
+    _oneStopResult = await getOneStopListAPI();
+    setState(() {});
+  }
 
   List<Widget> getScrollViewChildren() {
     return [
@@ -84,13 +106,13 @@ class _HomeViewState extends State<HomeView> {
       SliverToBoxAdapter(child: HmSlider(bannerList: _bannerList)),
       SliverToBoxAdapter(child: SizedBox(height: 20)),
       // 分类
-      SliverToBoxAdapter(child: HmCategory(categoryList: _categoryList,)),
+      SliverToBoxAdapter(child: HmCategory(categoryList: _categoryList)),
       SliverToBoxAdapter(child: SizedBox(height: 20)),
       // 推荐
       SliverToBoxAdapter(
         child: Padding(
           padding: EdgeInsets.only(left: 10, right: 10),
-          child: HmSuggestion(specialRecommend: _specialRecommend,),
+          child: HmSuggestion(specialRecommend: _specialRecommend),
         ),
       ),
       SliverToBoxAdapter(child: SizedBox(height: 20)),
@@ -101,9 +123,13 @@ class _HomeViewState extends State<HomeView> {
           child: Flex(
             direction: Axis.horizontal,
             children: [
-              Expanded(child: HmHot()),
+              Expanded(
+                child: HmHot(result: _inVogueResult, type: "hot"),
+              ),
               SizedBox(width: 10),
-              Expanded(child: HmHot()),
+              Expanded(
+                child: HmHot(result: _oneStopResult, type: "step"),
+              ),
             ],
           ),
         ),

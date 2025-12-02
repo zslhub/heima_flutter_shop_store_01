@@ -6,6 +6,8 @@ class GlobalConstants {
 
 class HttpConstants {
   static const BANNER_LSIT = '/home/banner'; // 轮播图
-  static const CATEGORY_LIST = '/home/category/head';  // 分类列表
+  static const CATEGORY_LIST = '/home/category/head'; // 分类列表
   static const PRODUCT_LSIT = '/hot/preference'; // 特惠推荐列表
+  static const String IN_VOGUE_LIST = "/hot/inVogue"; // 热榜推荐地址
+  static const String ONE_STOP_LIST = "/hot/oneStop"; // 一站式推荐地址
 }
