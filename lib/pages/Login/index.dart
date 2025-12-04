@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:heima_flutter_shop_store_01/api/user.dart';
 import 'package:heima_flutter_shop_store_01/utils/ToastUtils.dart';
 
 class LoginPage extends StatefulWidget {
@@ -9,8 +11,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  final TextEditingController _phoneController = TextEditingController(); // 账号控制器
-  final TextEditingController _codeController = TextEditingController(); // 密码控制器
+  final TextEditingController _phoneController =
+      TextEditingController(); // 账号控制器
+  final TextEditingController _codeController =
+      TextEditingController(); // 密码控制器
   // 用户账号Widget
   Widget _buildPhoneTextField() {
     return TextFormField(
@@ -74,6 +78,7 @@ class LoginPageState extends State<LoginPage> {
           // 登录逻辑
           if (_formKey.currentState!.validate()) {
             if (_isChecked) {
+              _login();
             } else {
               Toastutils.showToast(context, '请同意隐私条款和用户协议');
             }
@@ -88,6 +93,21 @@ class LoginPageState extends State<LoginPage> {
         child: Text("登录", style: TextStyle(fontSize: 18, color: Colors.white)),
       ),
     );
+  }
+
+  _login() async {
+    try {
+      // 登录逻辑
+      final res = await loginAPI({
+        'account': _phoneController.text,
+        'password': _codeController.text,
+      });
+      Toastutils.showToast(context, '登录成功');
+      //
+      Navigator.pop(context);
+    } catch (e) {
+      Toastutils.showToast(context, (e as DioException).message ?? '登录失败');
+    }
   }
 
   bool _isChecked = false;

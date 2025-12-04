@@ -32,19 +32,29 @@ class DioRequest {
         },
         // 错误抛出
         onError: (error, handler) {
-          handler.reject(error);
+          // handler.reject(error);
+          handler.reject(
+            DioException(
+              requestOptions: error.requestOptions,
+              message: error.response?.data['msg'] ?? '加载数据异常',
+            ),
+          );
         },
       ),
     );
   }
 
-  // 封装请求方法
+  // 封装get请求方法
   Future<dynamic> get(String url, {Map<String, dynamic>? params}) {
     return _handleResponse(_dio.get(url, queryParameters: params));
   }
 
+  // 封装post请求方法
+  Future<dynamic> post(String url, {Map<String, dynamic>? data}) {
+    return _handleResponse(_dio.post(url, data: data));
+  }
+
   Future<dynamic> _handleResponse(Future<Response<dynamic>> task) async {
-    
     try {
       // 等待get返回数据
       Response<dynamic> res = await task;
@@ -54,10 +64,15 @@ class DioRequest {
         return data['result'];
       }
       // 抛出异常
-      throw Exception(data['msg'] ?? '加载数据异常');
+      // throw Exception(data['msg'] ?? '加载数据异常');
+      throw DioException(
+        requestOptions: res.requestOptions,
+        message: data['msg'] ?? '加载数据异常',
+      );
     } catch (e) {
       // 其他异常
-      throw Exception(e);
+      // throw Exception(e);
+      rethrow;
     }
   }
 }
