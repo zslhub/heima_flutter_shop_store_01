@@ -35,7 +35,7 @@ class HmMoreListState extends State<HmMoreList> {
         ),
         SizedBox(height: 5),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: 5),
           child: Text(
             widget.recommendList[index].name,
             maxLines: 2,
@@ -45,7 +45,7 @@ class HmMoreListState extends State<HmMoreList> {
         ),
         SizedBox(height: 5),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -54,20 +54,21 @@ class HmMoreListState extends State<HmMoreList> {
                   text: "¥${widget.recommendList[index].price}",
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.w800,
                   ),
-                  children: [
-                    TextSpan(text: " "),
-                    TextSpan(
-                      text: widget.recommendList[index].price,
-                      style: TextStyle(
-                        decoration: TextDecoration.lineThrough,
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+                  // 划线价格
+                  // children: [
+                  //   TextSpan(text: " "),
+                  //   TextSpan(
+                  //     text: widget.recommendList[index].price,
+                  //     style: TextStyle(
+                  //       decoration: TextDecoration.lineThrough,
+                  //       color: Colors.grey,
+                  //       fontSize: 8,
+                  //     ),
+                  //   ),
+                  // ],
                 ),
               ),
               Text(
