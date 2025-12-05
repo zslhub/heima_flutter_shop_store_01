@@ -5,6 +5,7 @@ import 'package:heima_flutter_shop_store_01/api/user.dart';
 import 'package:heima_flutter_shop_store_01/stores/token_manager.dart';
 import 'package:heima_flutter_shop_store_01/stores/user_controller.dart';
 import 'package:heima_flutter_shop_store_01/utils/ToastUtils.dart';
+import 'package:heima_flutter_shop_store_01/utils/loding_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -100,7 +101,9 @@ class LoginPageState extends State<LoginPage> {
   }
 
   _login() async {
+    // LodingDialog.show(context, message: '弹框测试');
     try {
+      LodingDialog.show(context, message: '正在登录');
       // 登录逻辑
       final res = await loginAPI({
         'account': _phoneController.text,
@@ -108,11 +111,13 @@ class LoginPageState extends State<LoginPage> {
       });
       _userController.updateUserInfo(res);
       tokenManager.setToken(res.token);
+      LodingDialog.hide(context);
       Toastutils.showToast(context, '登录成功');
 
       // 返回上一页
       Navigator.pop(context);
     } catch (e) {
+      LodingDialog.hide(context);
       Toastutils.showToast(context, (e as DioException).message ?? '登录失败');
     }
   }

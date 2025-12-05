@@ -4,9 +4,11 @@ import 'package:heima_flutter_shop_store_01/api/my.dart';
 
 import 'package:heima_flutter_shop_store_01/components/Home/HmMoreList.dart';
 import 'package:heima_flutter_shop_store_01/components/My/HmGuess.dart';
+import 'package:heima_flutter_shop_store_01/stores/token_manager.dart';
 
 import 'package:heima_flutter_shop_store_01/stores/user_controller.dart';
 import 'package:heima_flutter_shop_store_01/viewmodels/home.dart';
+import 'package:heima_flutter_shop_store_01/viewmodels/user.dart';
 
 class MyView extends StatefulWidget {
   const MyView({super.key});
@@ -18,8 +20,47 @@ class MyView extends StatefulWidget {
 class MyViewState extends State<MyView> {
   final UserController _userController = Get.find();
 
+  Widget _getLogout() {
+    return _userController.user.value.id.isNotEmpty
+        ? Expanded(
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('提示'),
+                      content: Text('确定要退出登录吗？'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('取消'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // 清空token
+                            await tokenManager.clearToken();
+                            // 清空用户信息
+                            _userController.updateUserInfo(
+                              UserInfo.fromJSON({}),
+                            );
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('确定'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text('退出登录', textAlign: TextAlign.end),
+            ),
+          )
+        : Text('');
+  }
 
-  
   Widget _buildHeader() {
     return Container(
       decoration: BoxDecoration(
@@ -37,8 +78,7 @@ class MyViewState extends State<MyView> {
               radius: 26,
               backgroundImage: _userController.user.value.avatar.isNotEmpty
                   ? NetworkImage(_userController.user.value.avatar)
-                  :
-              const AssetImage('lib/assets/goods_avatar.png'),
+                  : const AssetImage('lib/assets/goods_avatar.png'),
               backgroundColor: Colors.white,
             );
           }),
@@ -69,6 +109,10 @@ class MyViewState extends State<MyView> {
               ],
             ),
           ),
+
+          Obx(() {
+            return _getLogout();
+          }),
         ],
       ),
     );
