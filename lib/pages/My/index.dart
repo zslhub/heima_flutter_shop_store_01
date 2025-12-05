@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:heima_flutter_shop_store_01/api/my.dart';
+
 import 'package:heima_flutter_shop_store_01/components/Home/HmMoreList.dart';
 import 'package:heima_flutter_shop_store_01/components/My/HmGuess.dart';
+
+import 'package:heima_flutter_shop_store_01/stores/user_controller.dart';
 import 'package:heima_flutter_shop_store_01/viewmodels/home.dart';
 
 class MyView extends StatefulWidget {
@@ -12,6 +16,10 @@ class MyView extends StatefulWidget {
 }
 
 class MyViewState extends State<MyView> {
+  final UserController _userController = Get.find();
+
+
+  
   Widget _buildHeader() {
     return Container(
       decoration: BoxDecoration(
@@ -24,25 +32,40 @@ class MyViewState extends State<MyView> {
       padding: const EdgeInsets.only(left: 20, right: 40, top: 80, bottom: 20),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 26,
-            backgroundImage: const AssetImage('lib/assets/goods_avatar.png'),
-            backgroundColor: Colors.white,
-          ),
+          Obx(() {
+            return CircleAvatar(
+              radius: 26,
+              backgroundImage: _userController.user.value.avatar.isNotEmpty
+                  ? NetworkImage(_userController.user.value.avatar)
+                  :
+              const AssetImage('lib/assets/goods_avatar.png'),
+              backgroundColor: Colors.white,
+            );
+          }),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/login');
-                  },
-                  child: Text(
-                    '立即登录',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                ),
+                Obx(() {
+                  return GestureDetector(
+                    onTap: () {
+                      if (_userController.user.value.id.isNotEmpty) {
+                        return;
+                      }
+                      Navigator.pushNamed(context, '/login');
+                    },
+                    child: Text(
+                      _userController.user.value.id.isNotEmpty
+                          ? _userController.user.value.account
+                          : '立即登录',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  );
+                }),
               ],
             ),
           ),

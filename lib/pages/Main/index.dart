@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:heima_flutter_shop_store_01/api/user.dart';
 import 'package:heima_flutter_shop_store_01/pages/Cart/index.dart';
 import 'package:heima_flutter_shop_store_01/pages/Category/index.dart';
 import 'package:heima_flutter_shop_store_01/pages/Home/index.dart';
 import 'package:heima_flutter_shop_store_01/pages/My/index.dart';
+import 'package:heima_flutter_shop_store_01/stores/token_manager.dart';
+import 'package:heima_flutter_shop_store_01/stores/user_controller.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -12,6 +16,18 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final UserController _userController = Get.put(UserController());
+  @override
+  void initState() {
+    super.initState();
+    _initUser();
+  }
+  _initUser() async {
+    await tokenManager.init();  // 初始化token
+    if (tokenManager.getToken().isNotEmpty) {
+      _userController.updateUserInfo(await getUserInfoAPI()) ;
+    }
+  }
   // 定义数据 根据数据进行渲染四个导航
   final List<Map<String, String>> _tabList = [
     {

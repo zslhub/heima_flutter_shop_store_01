@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:heima_flutter_shop_store_01/constants/index.dart';
+import 'package:heima_flutter_shop_store_01/stores/token_manager.dart';
 
 class DioRequest {
   final _dio = Dio();
@@ -19,6 +20,12 @@ class DioRequest {
       InterceptorsWrapper(
         // 请求拦截器
         onRequest: (request, handler) {
+          if (tokenManager.getToken().isNotEmpty) {
+            request.headers = {
+              "Authorization": 'Bearer ${tokenManager.getToken()}',
+            };
+          }
+
           handler.next(request);
         },
         // 响应拦截器

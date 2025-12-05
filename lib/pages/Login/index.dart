@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:heima_flutter_shop_store_01/api/user.dart';
+import 'package:heima_flutter_shop_store_01/stores/token_manager.dart';
+import 'package:heima_flutter_shop_store_01/stores/user_controller.dart';
 import 'package:heima_flutter_shop_store_01/utils/ToastUtils.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,6 +18,7 @@ class LoginPageState extends State<LoginPage> {
       TextEditingController(); // 账号控制器
   final TextEditingController _codeController =
       TextEditingController(); // 密码控制器
+  final UserController _userController = Get.find();
   // 用户账号Widget
   Widget _buildPhoneTextField() {
     return TextFormField(
@@ -102,8 +106,11 @@ class LoginPageState extends State<LoginPage> {
         'account': _phoneController.text,
         'password': _codeController.text,
       });
+      _userController.updateUserInfo(res);
+      tokenManager.setToken(res.token);
       Toastutils.showToast(context, '登录成功');
-      //
+
+      // 返回上一页
       Navigator.pop(context);
     } catch (e) {
       Toastutils.showToast(context, (e as DioException).message ?? '登录失败');
